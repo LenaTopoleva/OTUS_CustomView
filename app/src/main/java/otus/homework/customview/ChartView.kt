@@ -5,8 +5,10 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.os.Build
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import kotlinx.parcelize.Parcelize
 import otus.homework.customview.utils.px
 import java.time.Duration
 import java.time.Instant
@@ -81,6 +83,19 @@ class ChartView @JvmOverloads constructor(
         blue2Paint,
         purple1Paint
     )
+
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        return ChartState(superState, data)
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val chartState = state as? ChartState
+        super.onRestoreInstanceState(chartState?.superState ?: state)
+
+        data = chartState?.data ?: emptyMap()
+        invalidate()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDraw(canvas: Canvas) {
@@ -159,3 +174,7 @@ class ChartView @JvmOverloads constructor(
         invalidate()
     }
 }
+
+@Parcelize
+class ChartState(private val superSavedState: Parcelable?, val data: Map<String, List<PurchaseInfo>>) :
+    View.BaseSavedState(superSavedState), Parcelable

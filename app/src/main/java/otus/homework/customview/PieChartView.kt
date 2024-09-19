@@ -145,14 +145,14 @@ class PieChartView @JvmOverloads constructor(
 
     override fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
-        return MyState(superState, data)
+        return PieChartState(superState, data)
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        val myState = state as? MyState
-        super.onRestoreInstanceState(myState?.superState ?: state)
+        val pieChartState = state as? PieChartState
+        super.onRestoreInstanceState(pieChartState?.superState ?: state)
 
-        data = myState?.data ?: emptyList()
+        data = pieChartState?.data ?: emptyList()
         invalidate()
     }
 
@@ -228,5 +228,5 @@ data class CategoryInfo(
 )
 
 @Parcelize
-class MyState(private val superSavedState: Parcelable?, val data: List<Pair<Int, String>>) :
+class PieChartState(private val superSavedState: Parcelable?, val data: List<Pair<Int, String>>) :
     View.BaseSavedState(superSavedState), Parcelable
